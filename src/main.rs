@@ -10,9 +10,10 @@ use std::time::{Instant};
 const LEN: usize = 18; // the length of suffixes
 const ITERATION: u64 = 1 << 32; // the number of iterations
 
-fn calculate_hash(prefix: &str, suffix: &[u8], buffer: &mut [u8; 20]) {
-    // create a Sha1 object
-    let mut hasher = Sha1::new();
+fn calculate_hash(hasher: &mut Sha1, prefix: &str, suffix: &[u8], buffer: &mut [u8; 20]) {
+
+    // reset
+    hasher.reset();
 
     // write input message
     hasher.input_str(prefix);
@@ -34,6 +35,9 @@ fn main() {
     let mut rng = rand::thread_rng();
 
     let numero = Range::new(48, 58);
+    // create a Sha1 object
+    let mut hasher = Sha1::new();
+
     for i in 0 .. 16 {
         let num_iter = (2 * i + 1) * ITERATION / 256;
         let start = Instant::now();
@@ -54,7 +58,7 @@ fn main() {
             for i in 0 .. LEN {
                 suffix[i] = numero.ind_sample(&mut rng) as u8;
             }
-            calculate_hash(initial_str, &suffix, &mut buffer);
+            calculate_hash(&mut hasher, initial_str, &suffix, &mut buffer);
             if min_hash > buffer {
                 print!("Hash update: ");
                 display!();
