@@ -63,8 +63,8 @@ fn main() {
                 print!("Hash update: ");
                 display!();
                 min_hash = buffer;
-            } else if &buffer[0..7] < &[0, 0, 0, 0x10] {
-                // once in every 2^28 hashes
+            } else if &buffer[0..4] < &[0, 0, 0, 0x40] {
+                // once in every 2^26 hashes
                 print!("Jackpot ");
                 display!();
             }
